@@ -17,20 +17,20 @@ define(["myCustomScriptOne","myCustomScriptTwo"], function(delegateOne,delegateT
 
     function makeDelegator(eventName, hasReturn) {
         return hasReturn ?
-		    function delegatorWithoutReturn(param) {
-			for(var delegate of delegates)
-			    if(eventName in delegate && typeof delegate[eventName] === "function")
-				delegate[eventName](param);
-		    } :
-		    function delegatorWithReturn(param) {
-			for(var delegate of delegates)
-			    if(eventName in delegate && typeof delegate[eventName] === "function")
-				if(!delegate[eventName](param))
-				    return false;
-				// else continue looping
-			// all delegates returned true, so
-			return true;
-		    };
+            function delegatorWithoutReturn(param) {
+            for(var delegate of delegates)
+                if(eventName in delegate && typeof delegate[eventName] === "function")
+                delegate[eventName](param);
+            } :
+            function delegatorWithReturn(param) {
+            for(var delegate of delegates)
+                if(eventName in delegate && typeof delegate[eventName] === "function")
+                if(!delegate[eventName](param))
+                    return false;
+                // else continue looping
+            // all delegates returned true, so
+            return true;
+            };
     }
 
     return {
