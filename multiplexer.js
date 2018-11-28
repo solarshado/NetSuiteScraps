@@ -6,14 +6,14 @@
 define(["myCustomScriptOne","myCustomScriptTwo"], function(delegateOne,delegateTwo) {
     // myCustomScriptOne and myCustomScriptTwo are normal client scripts
 
-	//var delegates = Array.from(arguments);
-	// if Array.from isn't supported:
-	//var delegates = Array.prototype.slice.call(arguments);
-	// unfortunate last resort:
-	//var delegates = [delegateOne,delegateTwo];
-	
-	// this should work...
-	var delegates = (Array.from || Array.prototype.slice.call)(arguments);
+    //var delegates = Array.from(arguments);
+    // if Array.from isn't supported:
+    //var delegates = Array.prototype.slice.call(arguments);
+    // unfortunate last resort:
+    //var delegates = [delegateOne,delegateTwo];
+
+    // this should work...
+    var delegates = (Array.from || Array.prototype.slice.call)(arguments);
 
     /**
      * Function to be executed after page is initialized.
@@ -23,10 +23,10 @@ define(["myCustomScriptOne","myCustomScriptTwo"], function(delegateOne,delegateT
      * @param {string} scriptContext.mode - The mode in which the record is being accessed (create, copy, or edit)
      */
     function pageInit(scriptContext) {
-		for(var delegate of delegates)
-			if("pageInit" in delegate && typeof delegate.pageInit === "function")
-				delegate.pageInit(scriptContext);
-	}
+        for(var delegate of delegates)
+            if("pageInit" in delegate && typeof delegate.pageInit === "function")
+                delegate.pageInit(scriptContext);
+    }
 
     /**
      * Function to be executed when field is changed.
@@ -81,16 +81,16 @@ define(["myCustomScriptOne","myCustomScriptTwo"], function(delegateOne,delegateT
      * @returns {boolean} Return true if field is valid
      */
     function validateField(scriptContext) {
-		for(var delegate of delegates)
-			if("validateField" in delegate && typeof delegate.validateField === "function") {
-				// could shorten this, but for the sake of clarity
-				var val = delegate.validateField(scriptContext);
-				if(!val) return false
-				// else continue looping
-			}
-		// all delegates returned true, so
-		return true;
-	}
+        for(var delegate of delegates)
+            if("validateField" in delegate && typeof delegate.validateField === "function") {
+                // could shorten this, but for the sake of clarity
+                var val = delegate.validateField(scriptContext);
+                if(!val) return false
+                // else continue looping
+            }
+        // all delegates returned true, so
+        return true;
+    }
 
     /**
      * Validation function to be executed when sublist line is committed.
@@ -130,7 +130,7 @@ define(["myCustomScriptOne","myCustomScriptTwo"], function(delegateOne,delegateT
      *
      * @param {Object} scriptContext
      * @param {Record} scriptContext.currentRecord - Current form record
-	 *
+     *
      * @returns {boolean} Return true if record is valid
      */
     function saveRecord(scriptContext) { /* TODO, but same as validateField */ }
