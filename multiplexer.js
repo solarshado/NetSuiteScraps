@@ -16,18 +16,22 @@ define(["myCustomScriptOne","myCustomScriptTwo"], function(delegateOne,delegateT
 	var delegates = (Array.from || Array.prototype.slice.call)(arguments);
 
 	function makeDelegator(eventName, hasReturn) {
+		var delegateHandlers = [];
+
+		for(var delegate of delegates)
+			if(eventName in delegate && typeof delegate[eventName] === "function")
+				delegateHandlers.push(delegate[eventName]);
+
 		return hasReturn ?
 			function delegatorWithoutReturn(param) {
-				for(var delegate of delegates)
-					if(eventName in delegate && typeof delegate[eventName] === "function")
-						delegate[eventName](param);
+				for(var handler of delegateHandlers)
+					handler(param);
 			} :
 			function delegatorWithReturn(param) {
-				for(var delegate of delegates)
-					if(eventName in delegate && typeof delegate[eventName] === "function")
-						if(!delegate[eventName](param))
-							return false;
-						// else continue looping
+				for(var handler of delegateHandlers)
+					if(!handler(param))
+						return false;
+					// else continue looping
 				// all delegates returned true, so
 				return true;
 			};
