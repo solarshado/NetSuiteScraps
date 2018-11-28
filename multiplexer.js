@@ -22,6 +22,10 @@ define(["myCustomScriptOne","myCustomScriptTwo"], function(delegateOne,delegateT
 			if(eventName in delegate && typeof delegate[eventName] === "function")
 				delegateHandlers.push(delegate[eventName]);
 
+		// not sure if NS would choke on this. would be a very small optimization anyway.
+		//if(delegateHandlers.length === 0)
+		//	return undefined;
+
 		return hasReturn ?
 			function delegatorWithoutReturn(param) {
 				for(var handler of delegateHandlers)
