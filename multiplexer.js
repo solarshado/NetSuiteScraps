@@ -24,12 +24,10 @@ define(["myCustomScriptOne","myCustomScriptTwo"], function(delegateOne,delegateT
 		    } :
 		    function delegatorWithReturn(param) {
 			for(var delegate of delegates)
-			    if(eventName in delegate && typeof delegate[eventName] === "function") {
-				// could shorten this, but for the sake of clarity
-				var val = delegate[eventName](param);
-				if(!val) return false
+			    if(eventName in delegate && typeof delegate[eventName] === "function")
+				if(!delegate[eventName](param))
+				    return false;
 				// else continue looping
-			    }
 			// all delegates returned true, so
 			return true;
 		    };
