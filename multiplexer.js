@@ -15,6 +15,7 @@ define(["myCustomScriptOne","myCustomScriptTwo"], function(delegateOne,delegateT
 	// this should work...
 	var delegates = (Array.from || Array.prototype.slice.call)(arguments);
 
+	// Note: returns undef if no delegates appear to be interested in the named event
 	function makeDelegator(eventName, hasReturn) {
 		var delegateHandlers = [];
 
@@ -22,11 +23,8 @@ define(["myCustomScriptOne","myCustomScriptTwo"], function(delegateOne,delegateT
 			if(eventName in delegate && typeof delegate[eventName] === "function")
 				delegateHandlers.push(delegate[eventName]);
 
-		// not sure if NS would choke on this. would be a very small optimization anyway.
-		//if(delegateHandlers.length === 0)
-		//	return undefined;
-
-		return hasReturn ?
+		return delegateHandlers.length === 0 ? undefined :
+			hasReturn ?
 			function delegatorWithoutReturn(param) {
 				for(var handler of delegateHandlers)
 					handler(param);
@@ -41,16 +39,25 @@ define(["myCustomScriptOne","myCustomScriptTwo"], function(delegateOne,delegateT
 			};
 	}
 
-	return {
-		pageInit: makeDelegator("pageInit", false),
-		fieldChanged: makeDelegator("fieldChanged", false),
-		postSourcing: makeDelegator("postSourcing", false),
-		sublistChanged: makeDelegator("sublistChanged", false),
-		lineInit: makeDelegator("lineInit", false),
-		validateField: makeDelegator("validateField", true),
-		validateLine: makeDelegator("validateLine", true),
-		validateInsert: makeDelegator("validateInsert", true),
-		validateDelete: makeDelegator("validateDelete", true),
-		saveRecord: makeDelegator("saveRecord", true)
-	};
+	// this may make it easier to generalize this code for other script types
+	var events = [
+		{name: "pageInit", hasReturn: false},
+		{name: "fieldChanged", hasReturn: false},
+		{name: "postSourcing", hasReturn: false},
+		{name: "sublistChanged", hasReturn: false},
+		{name: "lineInit", hasReturn: false},
+		{name: "validateField", hasReturn: true},
+		{name: "validateLine", hasReturn: true},
+		{name: "validateInsert", hasReturn: true},
+		{name: "validateDelete", hasReturn: true},
+		{name: "saveRecord", hasReturn: true},
+	];
+
+	var retVal = {};
+	for(var event of events) {
+		var handler = makeDelegator(event.name, event.hasReturn);
+		if(handler) // don't add undefs, NS might choke on them
+			retVal[event.name] = handler;
+	}
+	return retVal;
 });
