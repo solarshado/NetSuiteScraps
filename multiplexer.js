@@ -19,19 +19,19 @@ define(["myCustomScriptOne","myCustomScriptTwo"], function(delegateOne,delegateT
 	function makeDelegator(eventName, hasReturn) {
 		var delegateHandlers = [];
 
-		for(var delegate of delegates)
-			if(eventName in delegate && typeof delegate[eventName] === "function")
-				delegateHandlers.push(delegate[eventName]);
+		for(var i = 0; i < delegates.length; ++i)
+			if(eventName in delegates[i] && typeof delegates[i][eventName] === "function")
+				delegateHandlers.push(delegates[i][eventName]);
 
 		return delegateHandlers.length === 0 ? undefined :
 			hasReturn ?
 			function delegatorWithoutReturn(param) {
-				for(var handler of delegateHandlers)
-					handler(param);
+				for(var i = 0; i < delegateHandlers.length; ++i)
+					delegateHandlers[i](param);
 			} :
 			function delegatorWithReturn(param) {
-				for(var handler of delegateHandlers)
-					if(!handler(param))
+				for(var i = 0; i < delegateHandlers.length; ++i)
+					if(!delegateHandlers[i](param))
 						return false;
 					// else continue looping
 				// all delegates returned true, so
@@ -54,10 +54,10 @@ define(["myCustomScriptOne","myCustomScriptTwo"], function(delegateOne,delegateT
 	];
 
 	var retVal = {};
-	for(var event of events) {
-		var handler = makeDelegator(event.name, event.hasReturn);
+	for(var i = 0; i < events.length; ++i) {
+		var handler = makeDelegator(events[i].name, events[i].hasReturn);
 		if(handler) // don't add undefs, NS might choke on them
-			retVal[event.name] = handler;
+			retVal[events[i].name] = handler;
 	}
 	return retVal;
 });
