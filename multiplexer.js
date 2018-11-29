@@ -23,10 +23,6 @@ define([], function() {
 
 			return delegateHandlers.length === 0 ? undefined :
 				hasReturn ?
-				function delegatorWithoutReturn(param) {
-					for(var i = 0; i < delegateHandlers.length; ++i)
-						delegateHandlers[i](param);
-				} :
 				function delegatorWithReturn(param) {
 					for(var i = 0; i < delegateHandlers.length; ++i)
 						if(!delegateHandlers[i](param))
@@ -34,6 +30,10 @@ define([], function() {
 						// else continue looping
 					// all delegates returned true, so
 					return true;
+				} :
+				function delegatorWithoutReturn(param) {
+					for(var i = 0; i < delegateHandlers.length; ++i)
+						delegateHandlers[i](param);
 				};
 		}
 
